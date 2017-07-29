@@ -9,12 +9,6 @@
 
 
 
-
-
-
-
-
-
 (defn click-at [entities x y left-button?]
   "Handles user mouse clicks"
   (let [tile-x (u/get-tile-x x y)

@@ -5,14 +5,24 @@
 
 
 (def token-size 64)
+(def font-size 16)
 (def map-width 9)
 (def map-height 9)
+
+(def number-flip-offset (- token-size font-size))
+
 (def textures (atom {}))
+(def id (atom 0))
 
 (defn floor [i]
   (-> i (Math/floor) (int)))
 
+(defn get-entity-by-id [entities id]
+  (find-first (fn [e] (= (:id e) id)) entities))
 
+(defn get-next-id! []
+  "Creates a new id and returns it"
+  (swap! id + 1))
 
 (defn -load-texture! [filename width height]
   "Loads a plain texture into the cache"
@@ -29,20 +39,25 @@
       (-load-texture! filename width height)
       (get @textures filename))))
 
-(defn set-frame [entity width height frame-x frame-y]
-  "Set the entity texture frame"
-  (do (texture! entity :set-region
-                (* width frame-x)
-                (* height frame-y)
-                width height)
-    entity))
 
 (defn create-sprite! [filename x y z width height frame-x frame-y]
   "Creates the given sprite"
   (-> (get-texture! filename width height)
       (aget frame-x frame-y)
       (texture)
-      (assoc :x x :y y :z z :frame-x frame-x :frame-y frame-y)))
+      (assoc :x x :y y :z z :id (get-next-id!)
+        :filename filename :width width :height height)))
+
+
+(defn set-frame [entity frame-x frame-y]
+  (let [filename (:filename entity)
+        width (:width entity)
+        height (:height entity)
+        object (:object
+                 (-> (get-texture! filename width height)
+                     (aget frame-x frame-y)
+                     (texture)))]
+  (assoc entity :object object)))
 
 
 (defn get-screen-x [tile-x tile-y]
@@ -78,3 +93,11 @@
   (map
     (fn [entity] (if (condition entity) (effect entity) entity))
     entities))
+
+
+
+
+
+
+
+

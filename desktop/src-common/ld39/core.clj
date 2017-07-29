@@ -34,7 +34,9 @@
   :on-render
   (fn [screen entities]
     (clear!)
-    (render! screen entities))
+    (->> entities
+      (d/animate)
+      (render! screen)))
 
   :on-touch-down
   (fn [screen entities]
