@@ -21,7 +21,7 @@
   "Spawn a given entity"
   (conj entities
         (case word
-          :snake (assoc (create-token x y 0 4)
+          :snake (assoc (create-token x y 1 0)
                    :player? true)
           :planet (create-token x y 0 1)
           nil)))
