@@ -13,10 +13,8 @@
   (-> entities
       (conj (u/create-sprite! "astral.png" 0 0 0 640 640 0 0))
       (d/spawn :snake 0 1)
-      (d/spawn :planet 3 4)
-      (d/spawn :planet 8 5)
-      (d/spawn :planet 8 8)
-      (d/spawn :planet 0 0)
+      (d/spawn :plain 3 4)
+      (d/spawn :plain 8 5)
       ))
 
 

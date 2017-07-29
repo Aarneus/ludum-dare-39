@@ -5,7 +5,7 @@
 
 
 
-(defn create-token [tile-x tile-y frame-x frame-y energy defense]
+(defn create-token [tile-x tile-y frame-x frame-y energy defense chain-range effects]
   "Creates a token as a sprite"
   (let [x (u/get-screen-x tile-x tile-y)
         y (u/get-screen-y tile-x tile-y)]
@@ -14,27 +14,29 @@
                           frame-x frame-y)
         (assoc :token? true
           :tile-x tile-x :tile-y tile-y
-          :energy energy :defense defense))))
+          :energy energy :defense defense
+          :chain-range chain-range :effects effects))))
 
 
-(defn create-number! [entities x y flip? word owner]
+(defn create-number! [entities x y flip? word owner colour]
   (if (some? (word owner))
     (conj entities
-          (-> (u/create-sprite! "font.png" x y 2 u/font-size u/font-size 0 1)
-              (assoc :number? true :owner-id (:id owner) :word word :flip? flip?)))
+          (-> (u/create-sprite! "font.png" x y 2 u/font-size u/font-size colour 1)
+              (assoc :number? true :owner-id (:id owner) :word word :colour colour :flip? flip?)))
     entities))
 
 (defn create-numbers [entities entity]
   "Creates the number sprites for the entity"
   (-> entities
-      (create-number! 0 0 true :energy entity)
-      (create-number! 10 10 false :defense entity)))
+      (create-number! 0 0 true :energy entity (if (:player? entity) 0 1))
+      (create-number! 10 10 false :defense entity 2)))
+
 
 (defn spawn [entities word x y]
   "Spawn a given entity"
   (let [entity (case word
-                 :snake (assoc (create-token x y 1 0 5 nil) :player? true)
-                 :planet (create-token x y 0 1 3 4)
+                 :snake (assoc (create-token x y 1 0 5 nil nil nil) :player? true)
+                 :plain (create-token x y 0 1 3 0 2 [])
                  nil)]
     (-> entities
         (conj entity)
@@ -49,7 +51,7 @@
                 (let [owner (u/get-entity-by-id entities (:owner-id entity))
                       value ((:word entity) owner)]
                   (-> entity
-                      (u/set-frame 0 value)
+                      (u/set-frame (:colour entity) value)
                       (assoc
                         :x (+ (:x owner) (if (:flip? entity) u/number-flip-offset 0))
                         :y (:y owner))))

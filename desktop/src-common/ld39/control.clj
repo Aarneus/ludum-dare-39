@@ -16,7 +16,9 @@
         token (u/get-token-at entities x y)]
       (if (some? token)
         ; Handle token clicks
-        entities
+        (if (:player? token)
+          entities
+          (e/interact entities (find-first :player? entities) token))
         ; Handle empty cell clicks
         (u/update-entities
           entities

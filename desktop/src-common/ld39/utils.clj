@@ -24,6 +24,17 @@
   "Creates a new id and returns it"
   (swap! id + 1))
 
+(defn in?
+  [coll element]
+  (some #(= element %) coll))
+
+(defn is? [entity]
+  (fn [e] (= (:id e) (:id entity))))
+
+(defn not-player? [entity]
+  (and (:token? entity) (not (:player? entity))))
+
+
 (defn -load-texture! [filename width height]
   "Loads a plain texture into the cache"
   (let [sheet (texture filename)
