@@ -7,8 +7,8 @@
 
 (defn create-token [tile-x tile-y frame-x frame-y]
   "Creates a token as a sprite"
-  (let [x (+ (* tile-x u/token-size) (* (mod tile-y 2) (/ u/token-size 2)))
-        y (* tile-y u/token-size)]
+  (let [x (u/get-screen-x tile-x tile-y)
+        y (u/get-screen-y tile-x tile-y)]
     (-> (u/create-sprite! "planets.png"  x y 1
                           u/token-size u/token-size
                           frame-x frame-y)
@@ -21,7 +21,8 @@
   "Spawn a given entity"
   (conj entities
         (case word
-          :snake (create-token x y 0 4)
+          :snake (assoc (create-token x y 0 4)
+                   :player? true)
           :planet (create-token x y 0 1)
           nil)))
 

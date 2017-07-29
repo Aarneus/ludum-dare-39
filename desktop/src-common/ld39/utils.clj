@@ -5,9 +5,13 @@
 
 
 (def token-size 64)
-
-
+(def map-width 9)
+(def map-height 9)
 (def textures (atom {}))
+
+(defn floor [i]
+  (-> i (Math/floor) (int)))
+
 
 
 (defn -load-texture! [filename width height]
@@ -39,3 +43,38 @@
       (aget frame-x frame-y)
       (texture)
       (assoc :x x :y y :z z :frame-x frame-x :frame-y frame-y)))
+
+
+(defn get-screen-x [tile-x tile-y]
+  "Returns the screen x coordinate for the given tile"
+  (+ (* tile-x token-size) (* (mod tile-y 2) (/ token-size 2))))
+
+(defn get-screen-y [tile-x tile-y]
+  "Returns the screen y coordinate for the given tile"
+  (* tile-y token-size))
+
+(defn get-tile-y [screen-x screen-y]
+  "Returns the tile coordinate y for the given screen coordinates"
+  (-> screen-y (/ token-size) (floor)))
+
+(defn get-tile-x [screen-x screen-y]
+  "Returns the tile coordinate x for the given screen coordinates"
+  (-> screen-x (- (* (/ token-size 2) (mod (get-tile-y screen-x screen-y) 2))) (/ token-size) (floor)))
+
+
+(defn get-token-at [entities x y]
+  "Returns the entity in screen coordinates x and y"
+  (let [tile-y (get-tile-y x y)
+        tile-x (get-tile-x x y)]
+    (find-first (fn [entity]
+                  (and (:token? entity)
+                       (= (:tile-x entity) tile-x)
+                       (= (:tile-y entity) tile-y)))
+                  entities)))
+
+
+(defn update-entities [entities condition effect]
+  "Applies the effect to the entities that fulfill the condition"
+  (map
+    (fn [entity] (if (condition entity) (effect entity) entity))
+    entities))
