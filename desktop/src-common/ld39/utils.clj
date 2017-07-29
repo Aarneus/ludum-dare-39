@@ -4,7 +4,7 @@
     [play-clj.g2d :refer :all]))
 
 
-(def entity-size 64)
+(def token-size 64)
 
 
 (def textures (atom {}))

@@ -11,16 +11,9 @@
   "Inits a new game"
   (-> entities
       (conj (u/create-sprite! "astral.png" 0 0 0 640 640 0 0))
-      (d/spawn :snake 260 230)
-      (d/spawn :planet 10 30)
+      (d/spawn :snake 0 1)
+      (d/spawn :planet 3 4)
       ))
-
-
-
-
-
-
-
 
 
 
