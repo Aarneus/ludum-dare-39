@@ -12,6 +12,7 @@
 (def number-flip-offset (- token-size font-size))
 
 (def textures (atom {}))
+(def sounds (atom {}))
 (def id (atom 0))
 
 (defn floor [i]
@@ -49,6 +50,19 @@
     (do
       (-load-texture! filename width height)
       (get @textures filename))))
+
+
+(defn get-sound! [filename]
+  "Returns the wanted sound file and loads it if not cached"
+  (if (some? (get @sounds filename))
+    (get @sounds filename)
+    (do
+      (swap! sounds assoc filename (sound filename))
+      (get @sounds filename))))
+
+(defn play-sound! [filename]
+  "Plays the given sound file"
+  (sound! (get-sound! filename) :play))
 
 
 (defn create-sprite! [filename x y z width height frame-x frame-y]

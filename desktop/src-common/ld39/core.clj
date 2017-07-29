@@ -10,12 +10,14 @@
 
 (defn start-game [entities]
   "Inits a new game"
-  (-> entities
-      (conj (u/create-sprite! "astral.png" 0 0 0 640 640 0 0))
-      (d/spawn :snake 0 1)
-      (d/spawn :plain 3 4)
-      (d/spawn :plain 8 5)
-      ))
+  (do
+    (u/play-sound! "level-start.wav")
+    (-> entities
+        (conj (u/create-sprite! "astral.png" 0 0 0 640 640 0 0))
+        (d/spawn :snake 0 1)
+        (d/spawn :plain 3 4)
+        (d/spawn :plain 8 5)
+        )))
 
 
 
