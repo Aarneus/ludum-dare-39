@@ -1,5 +1,6 @@
 (ns ld39.core
   (:require [ld39.utils :as u]
+            [ld39.data :as d]
             [play-clj.core :refer :all]
             [play-clj.ui :refer :all]
             [play-clj.g2d :refer :all]))
@@ -8,7 +9,13 @@
 
 (defn start-game [entities]
   "Inits a new game"
-  [(assoc (u/get-texture! "astral.png" nil nil) :x 0 :y 0 :z 0)])
+  (-> entities
+      (conj (u/create-sprite! "astral.png" 0 0 0 640 640 0 0))
+      (d/spawn :snake 260 230)
+      (d/spawn :planet 10 30)
+      ))
+
+
 
 
 
