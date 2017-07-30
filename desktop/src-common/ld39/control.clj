@@ -20,7 +20,4 @@
           entities
           (e/interact entities (find-first :player? entities) token))
         ; Handle empty cell clicks
-        (u/update-entities
-          entities
-          :player?
-          (fn [entity] (e/move-to-tile entity tile-x tile-y))))))
+        (e/move-to-tile entities (find-first :player? entities) tile-x tile-y))))

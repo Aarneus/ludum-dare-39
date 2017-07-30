@@ -20,6 +20,8 @@
         (d/spawn! :plain 4 3)
         (d/spawn! :plain 3 6)
         (d/spawn! :plain 4 7)
+        (d/spawn! :armed 2 1)
+        (d/spawn! :armed 3 3)
         )))
 
 

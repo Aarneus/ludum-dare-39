@@ -31,9 +31,11 @@
 
 (defn -apply-chains [planet function chains entities]
   "Applies the chain function to the given planet"
-  (loop [p planet c chains]
-    (if (empty? c) p
-      (recur (function p (peek c) entities) (pop c)))))
+  (if (some? chains)
+    (loop [p planet c (filter some? chains)]
+      (if (empty? c) p
+        (recur (function p (first c) entities) (rest c))))
+    planet))
 
 
 (defn -update-planet-chains [planet entities ]

@@ -6,11 +6,13 @@
             [play-clj.g2d :refer :all]))
 
 
-(defn move-to-tile [entity tile-x tile-y]
+(defn move-to-tile [entities entity tile-x tile-y]
   "Moves the entity to the coordinates"
-  (assoc entity :tile-x tile-x :tile-y tile-y
-    :x (u/get-screen-x tile-x tile-y)
-    :y (u/get-screen-y tile-x tile-y)))
+  (u/update-entities entities (u/is? entity)
+                     (fn [e] (assoc e
+                               :tile-x tile-x :tile-y tile-y
+                               :x (u/get-screen-x tile-x tile-y)
+                               :y (u/get-screen-y tile-x tile-y)))))
 
 
 
@@ -26,11 +28,6 @@
                        (max 0))))))
 
 
-
-
-
-
-
 (defn activate [entities snake planet]
   "Performs the planet's effects"
   entities
@@ -42,7 +39,9 @@
 
 (defn interact [entities snake planet]
   "Haves the snake move to and eat the target planet"
-  (-> entities
-      (u/update-entities (u/is? snake) (fn [e] (move-to-tile e (:tile-x planet) (:tile-y planet))))
-      (consume snake planet)
-      (activate snake planet)))
+  (do (u/play-sound! "consume.wav")
+    (-> entities
+        (move-to-tile snake (:tile-x planet) (:tile-y planet))
+        (consume snake planet)
+        (activate snake planet)
+        (d/despawn planet))))
