@@ -11,13 +11,16 @@
 
 (defn click-at [entities x y left-button?]
   "Handles user mouse clicks"
-  (let [tile-x (u/get-tile-x x y)
+  (let [player (find-first :player? entities)
+        tile-x (u/get-tile-x x y)
         tile-y (u/get-tile-y x y)
         token (u/get-token-at entities x y)]
+    (if (<= (u/get-token-distance player {:tile-x tile-x :tile-y tile-y})  1)
       (if (some? token)
         ; Handle token clicks
         (if (:player? token)
           entities
-          (e/interact entities (find-first :player? entities) token))
+          (e/interact entities player token))
         ; Handle empty cell clicks
-        (e/move-to-tile entities (find-first :player? entities) tile-x tile-y))))
+        (e/move-snake entities player tile-x tile-y))
+      entities)))

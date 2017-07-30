@@ -10,7 +10,7 @@
 (def half-font-size (/ font-size 2))
 (def map-width 9)
 (def map-height 9)
-(def tween-speed 0.25)
+(def tween-speed 0.3)
 
 (def number-flip-offset (- token-size font-size))
 (def particle-life 10)

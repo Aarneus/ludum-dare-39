@@ -8,6 +8,17 @@
             [play-clj.g2d :refer :all]))
 
 
+(defn update-underlay [entities]
+  "Shows the underlay when the player is not moving"
+  (let [player (find-first :player? entities)
+        player-moving? (and (:tween-x player) (> (Math/abs (- (:tween-x player) (:x player))) 1))
+        ux (- (:x player) u/token-size)
+        uy (- (:y player) u/token-size)
+        uz (if player-moving? -1 0.2)]
+    (u/update-entities
+      entities :underlay? (fn [e] (assoc e :x ux :y uy :z uz)))))
+
+
 
 (defn start-game [entities]
   "Inits a new game"
@@ -15,6 +26,7 @@
     (u/play-sound! "level-start.wav")
     (-> entities
         (conj (u/create-sprite! "astral.png" 0 0 0 640 640 0 0))
+        (conj (assoc (u/create-sprite! "underlay.png" 32 0 0.2 192 192 0 0) :underlay? true))
         (d/spawn! :snake 0 1)
         (d/spawn! :plain 3 4)
         (d/spawn! :plain 4 3)
@@ -43,6 +55,7 @@
          (p/update-chains)
          (p/animate-chains)
          (p/animate)
+         (update-underlay)
          (sort-by :z)
          (render! screen)))
 
