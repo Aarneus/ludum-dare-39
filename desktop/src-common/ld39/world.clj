@@ -19,7 +19,7 @@
   "Checks if the level is over"
   (cond
     (u/menu? entities) entities
-    (u/game-over? entities) (do (reset! u/level 0) (u/show-message entities "game-over.png"))
+    (u/game-over? entities) (do (u/play-sound! "game-over.wav") (reset! u/level 0) (u/show-message entities "game-over.png"))
     (u/victory? entities) (u/show-message entities "next-level.png")
     :else entities))
 
@@ -59,4 +59,5 @@
   (do (-> []
           (conj (u/create-sprite! "astral.png" 0 0 0 640 640 0 0))
           (conj (assoc (u/create-sprite! "underlay.png" 32 0 0.2 192 192 0 0) :underlay? true))
-          (d/spawn! :snake 2 2))))
+          (d/spawn! :snake 2 2)
+          (u/update-entities :player? (fn [e] (assoc e :tween-x (:x e) :tween-y (:y e) :x 0 :y 0))))))

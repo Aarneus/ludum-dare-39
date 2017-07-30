@@ -28,7 +28,9 @@
 
 
 (defn -destroy-chain [planet chained entities]
-  (assoc planet :chains (remove (fn [c] (= c chained)) (:chains planet))))
+  (do
+    (u/play-sound! "break.wav")
+    (assoc planet :chains (remove (fn [c] (= c chained)) (:chains planet)))))
 
 (defn -create-chain [planet chained entities]
   (assoc planet :chains (conj (:chains planet) chained)))

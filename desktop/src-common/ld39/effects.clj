@@ -68,7 +68,9 @@
 
 (defn interact [entities snake planet]
   "Haves the snake move to and eat the target planet"
-  (do (u/play-sound! "consume.wav")
+  (do
+    (when (> (:energy planet) 0) (u/play-sound! "consume.wav"))
+    (when (> (:defense planet) 0) (u/play-sound! "hit.wav"))
     (-> entities
         (move-to-tile snake (:tile-x planet) (:tile-y planet))
         (consume snake planet)
