@@ -14,6 +14,7 @@
     (-> [(u/create-sprite! "astral.png" 0 0 0 640 640 0 0)]
         (u/show-message "menu.png"))))
 
+
 (defn check-game-state [entities]
   "Checks if the level is over"
   (cond
@@ -33,7 +34,7 @@
           (d/spawn! :armed 3 3))
     2 (-> entities
           (d/spawn! :plain 3 4))
-    (main-menu)))
+    (do (reset! u/level 0) (u/show-message entities "ending.png"))))
 
 
 (defn next-level [entities]
@@ -50,4 +51,4 @@
   (do (-> []
           (conj (u/create-sprite! "astral.png" 0 0 0 640 640 0 0))
           (conj (assoc (u/create-sprite! "underlay.png" 32 0 0.2 192 192 0 0) :underlay? true))
-          (d/spawn! :snake 0 0))))
+          (d/spawn! :snake 2 2))))
