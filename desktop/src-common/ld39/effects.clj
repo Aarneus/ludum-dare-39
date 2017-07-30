@@ -28,13 +28,34 @@
     (fn [entity] (modify-number entity :energy (- (:energy planet) (:defense planet))))))
 
 
+(defn apply-effect [entities effect planet]
+  "Applies the effect using the given planet as the source"
+  (let [target (nth effect 1)
+        number (nth effect 2)
+        amount (nth effect 3)
+        function (fn [e] (modify-number e number amount))]
+    (case target
+      :self (u/update-entities entities (u/is? planet) function)
+      :chained (u/update-entities entities (u/chained-to? planet) function)
+      entities)))
 
-(defn activate [entities snake planet]
+
+
+
+(defn activate [entities word planet]
   "Performs the planet's effects"
-  entities
-  )
+  (let [effects (filter (fn [e] (= word (first e))) (:effects planet))]
+    (loop [f effects e entities]
+      (if (empty? f) e
+        (recur (rest f) (apply-effect e (first f) planet))))))
 
 
+(defn activate-planets [entities word]
+  "Performs all the planets' effects"
+  (let [planets (filter (fn [p] (and (:effects p))) entities)]
+    (loop [p planets e entities]
+      (if (empty? p) e
+        (recur (rest p) (activate e word (first p)))))))
 
 (defn move-snake [entities snake tile-x tile-y]
   "Move the snake to an empty space"
@@ -51,5 +72,5 @@
     (-> entities
         (move-to-tile snake (:tile-x planet) (:tile-y planet))
         (consume snake planet)
-        (activate snake planet)
+        (activate :eaten planet)
         (d/despawn planet))))

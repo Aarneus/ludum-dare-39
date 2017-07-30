@@ -20,7 +20,11 @@
         ; Handle token clicks
         (if (:player? token)
           entities
-          (e/interact entities player token))
+          (-> entities
+              (e/interact player token)
+              (e/activate-planets :tick)))
         ; Handle empty cell clicks
-        (e/move-snake entities player tile-x tile-y))
+        (-> entities
+            (e/move-snake player tile-x tile-y)
+            (e/activate-planets :tick)))
       entities)))

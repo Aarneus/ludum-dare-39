@@ -54,6 +54,9 @@
 (defn is? [entity]
   (fn [e] (= (:id e) (:id entity))))
 
+(defn chained-to? [entity]
+  (fn [e] (and (:chains e) (in? (:chains e) (:id entity)))))
+
 (defn not-player? [entity]
   (and (:token? entity) (not (:player? entity))))
 

@@ -34,8 +34,11 @@
   "Spawn a given entity"
   (let [entity (case word
                  :snake (assoc (create-token! x y 1 0 5 nil nil nil) :player? true)
-                 :plain (create-token! x y  0 2  2 1  1 [])
-                 :armed (create-token! x y  0 0  3 1  1 [[:defense :growth :tick]])
+                 :plain (create-token!
+                          x y  0 2  2 1  1 ())
+                 :armed (create-token!
+                          x y  0 0  3 1  1
+                          (list (list :tick :chained :defense 1)))
                  nil)]
     (-> entities
         (conj entity)
