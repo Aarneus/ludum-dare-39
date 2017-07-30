@@ -8,12 +8,19 @@
 (def font-size 16)
 (def map-width 9)
 (def map-height 9)
+(def tween-speed 0.25)
 
 (def number-flip-offset (- token-size font-size))
+(def particle-life 10)
 
 (def textures (atom {}))
 (def sounds (atom {}))
 (def id (atom 0))
+
+(def tween-keywords
+  (list :tween-x :x
+        :tween-y :y
+        :tween-angle :angle))
 
 (defn floor [i]
   (-> i (Math/floor) (int)))
@@ -51,7 +58,6 @@
       (-load-texture! filename width height)
       (get @textures filename))))
 
-
 (defn get-sound! [filename]
   "Returns the wanted sound file and loads it if not cached"
   (if (some? (get @sounds filename))
@@ -64,15 +70,25 @@
   "Plays the given sound file"
   (sound! (get-sound! filename) :play))
 
-
 (defn create-sprite! [filename x y z width height frame-x frame-y]
   "Creates the given sprite"
   (-> (get-texture! filename width height)
       (aget frame-x frame-y)
       (texture)
       (assoc :x x :y y :z z :id (get-next-id!)
-        :filename filename :width width :height height)))
+        :filename filename :width width :height height
+        :tween-speed tween-speed)))
 
+(defn create-particle! [entities x y angle frame-x frame-y tween-x tween-y life tween-speed]
+  (let [entity (assoc (create-sprite! "font.png" x y 3 font-size font-size frame-x frame-y)
+                 :token? false
+                 :particle? true
+                 :tween-x tween-x
+                 :tween-y tween-y
+                 :life life
+                 :angle angle
+                 :tween-speed tween-speed)]
+    (conj entities entity)))
 
 (defn set-frame [entity frame-x frame-y]
   (let [filename (:filename entity)

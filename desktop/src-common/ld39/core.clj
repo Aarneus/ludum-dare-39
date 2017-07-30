@@ -14,9 +14,10 @@
     (u/play-sound! "level-start.wav")
     (-> entities
         (conj (u/create-sprite! "astral.png" 0 0 0 640 640 0 0))
-        (d/spawn :snake 0 1)
-        (d/spawn :plain 3 4)
-        (d/spawn :plain 8 5)
+        (d/spawn! :snake 0 1)
+        (d/spawn! :plain 3 4)
+        (d/spawn! :plain 8 5)
+        (d/spawn-particle! :blue-arrow 120 120 200 200)
         )))
 
 
@@ -35,8 +36,9 @@
   (fn [screen entities]
     (clear!)
     (->> entities
-      (d/animate)
-      (render! screen)))
+         (d/animate)
+         (sort-by :z)
+         (render! screen)))
 
   :on-touch-down
   (fn [screen entities]
