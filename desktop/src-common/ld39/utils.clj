@@ -5,13 +5,17 @@
 
 
 (def token-size 64)
+(def half-token-size (/ token-size 2))
 (def font-size 16)
+(def half-font-size (/ font-size 2))
 (def map-width 9)
 (def map-height 9)
 (def tween-speed 0.25)
 
 (def number-flip-offset (- token-size font-size))
 (def particle-life 10)
+(def chain-interval 5)
+(def chain-speed 1)
 
 (def textures (atom {}))
 (def sounds (atom {}))
@@ -22,8 +26,19 @@
         :tween-y :y
         :tween-angle :angle))
 
+
+(defn radian-to-degree [x]
+  (/ (* 180 x) Math/PI))
+
+
 (defn floor [i]
   (-> i (Math/floor) (int)))
+
+(defn square [x]
+  (* x x))
+
+(defn euclidean-distance [xs ys]
+  (Math/sqrt (->> (map - ys xs) (map square) (reduce +))))
 
 (defn get-entity-by-id [entities id]
   (find-first (fn [e] (= (:id e) id)) entities))
@@ -41,6 +56,32 @@
 
 (defn not-player? [entity]
   (and (:token? entity) (not (:player? entity))))
+
+
+(defn calculate-particle-life [x y tx ty]
+    (/ (euclidean-distance [x tx] [y ty]) chain-speed))
+
+
+(defn offset-to-cube [col row]
+  "Translates offset coordinates to cube coordinates"
+  (let [cx (- col (/ (- row (bit-and row 1)) 2))
+        cz row
+        cy (- 0 cx cz)]
+    [cx cy cz]))
+
+(defn cube-distance [a b]
+  "Calculates the hex distance in cube coordinates"
+  (let [ax (nth a 0) ay (nth a 1) az (nth a 2)
+        bx (nth b 0) by (nth b 1) bz (nth b 2)]
+    (max (Math/abs (- ax bx))
+         (Math/abs (- ay by))
+         (Math/abs (- az bz)))))
+
+(defn get-token-distance [a b]
+  "Returns the tile distance between to tokens"
+  (let [ac (offset-to-cube (:tile-x a) (:tile-y a))
+        bc (offset-to-cube (:tile-x b) (:tile-y b))]
+    (cube-distance ac bc)))
 
 
 (defn -load-texture! [filename width height]
@@ -79,15 +120,16 @@
         :filename filename :width width :height height
         :tween-speed tween-speed)))
 
-(defn create-particle! [entities x y angle frame-x frame-y tween-x tween-y life tween-speed]
-  (let [entity (assoc (create-sprite! "font.png" x y 3 font-size font-size frame-x frame-y)
+(defn create-particle! [entities x y z angle frame-x frame-y tween-x tween-y life tween-speed]
+  (let [entity (assoc (create-sprite! "font.png" x y z font-size font-size frame-x frame-y)
                  :token? false
                  :particle? true
                  :tween-x tween-x
                  :tween-y tween-y
                  :life life
                  :angle angle
-                 :tween-speed tween-speed)]
+                 :tween-speed tween-speed
+                 :tween-lerp? true)]
     (conj entities entity)))
 
 (defn set-frame [entity frame-x frame-y]

@@ -2,6 +2,7 @@
   (:require [ld39.utils :as u]
             [ld39.data :as d]
             [ld39.control :as c]
+            [ld39.process :as p]
             [play-clj.core :refer :all]
             [play-clj.ui :refer :all]
             [play-clj.g2d :refer :all]))
@@ -16,8 +17,9 @@
         (conj (u/create-sprite! "astral.png" 0 0 0 640 640 0 0))
         (d/spawn! :snake 0 1)
         (d/spawn! :plain 3 4)
-        (d/spawn! :plain 8 5)
-        (d/spawn-particle! :blue-arrow 120 120 200 200)
+        (d/spawn! :plain 4 3)
+        (d/spawn! :plain 3 6)
+        (d/spawn! :plain 4 7)
         )))
 
 
@@ -36,7 +38,9 @@
   (fn [screen entities]
     (clear!)
     (->> entities
-         (d/animate)
+         (p/update-chains)
+         (p/animate-chains)
+         (p/animate)
          (sort-by :z)
          (render! screen)))
 
