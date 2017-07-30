@@ -25,7 +25,7 @@
 (def message-width 512)
 (def message-height 256)
 (def message-offset-x (/ (- screen-width message-width) 2))
-(def message-offset-y (/ (- screen-height message-height) 2))
+(def message-offset-y (+ token-size (/ (- screen-height message-height) 2)))
 
 (def textures (atom {}))
 (def sounds (atom {}))

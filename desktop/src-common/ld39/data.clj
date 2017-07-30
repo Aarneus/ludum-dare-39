@@ -41,7 +41,7 @@
                           x y   0 0   3 1   1 :red-arrow
                           (list (list :tick :chained :defense 1)))
                  :giant (create-token!
-                          x y   0 3   1 0   1 nil
+                          x y   0 3   1 0   2 nil
                           (list (list :tick :self :energy 1)))
                  nil)]
     (-> entities

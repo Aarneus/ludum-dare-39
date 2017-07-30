@@ -50,9 +50,18 @@
           (d/spawn! :plain 2 8))
     6 (-> entities ;BC
           (d/spawn! :armed 5 5)
-          (d/spawn! :armed 4 4)
-          (d/spawn! :giant 6 5)
-          (d/spawn! :giant 3 3))
+          (d/spawn! :giant 3 3)
+          (d/spawn! :armed 1 4)
+          (d/spawn! :giant 7 7)) ;7
+    7 (-> entities ;ABC
+          (d/spawn! :plain 8 6)
+          (d/spawn! :plain 7 4)
+          (d/spawn! :plain 5 3)
+          (d/spawn! :plain 3 3)
+          (d/spawn! :plain 2 4)
+          (d/spawn! :plain 2 6)
+          (d/spawn! :armed 4 5)
+          (d/spawn! :giant 3 7))
 
 
 
