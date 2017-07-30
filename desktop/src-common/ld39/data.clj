@@ -17,7 +17,7 @@
       (create-number! 0 0 true :energy entity (if (:player? entity) 0 1))
       (create-number! 10 10 false :defense entity 2)))
 
-(defn create-token! [tile-x tile-y frame-x frame-y energy defense chain-range effects]
+(defn create-token! [tile-x tile-y frame-x frame-y energy defense chain-range particle effects]
   "Creates a token as a sprite"
   (let [x (u/get-screen-x tile-x tile-y)
         y (u/get-screen-y tile-x tile-y)]
@@ -27,17 +27,18 @@
         (assoc :token? true
           :tile-x tile-x :tile-y tile-y
           :energy energy :defense defense
+          :particle particle
           :chain-range chain-range :effects effects
           :chain-cooldown (if chain-range 0 nil) :chains []))))
 
 (defn spawn! [entities word x y]
   "Spawn a given entity"
   (let [entity (case word
-                 :snake (assoc (create-token! x y 1 0 10 nil nil nil) :player? true)
+                 :snake (assoc (create-token! x y 1 0 10 nil nil nil nil) :player? true)
                  :plain (create-token!
-                          x y  0 2  2 1  1 ())
+                          x y  0 2  2 0  0 nil ())
                  :armed (create-token!
-                          x y  0 0  3 1  1
+                          x y  0 0  3 1  1 :red-arrow
                           (list (list :tick :chained :defense 1)))
                  nil)]
     (-> entities

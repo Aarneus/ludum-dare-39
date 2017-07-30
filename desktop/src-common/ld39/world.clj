@@ -27,13 +27,21 @@
 (defn level-entities [entities level]
   "Spawns the level specific tokens"
   (case level
-    1 (-> entities
+    1 (-> entities ;A
           (d/spawn! :plain 3 4)
           (d/spawn! :plain 3 6)
-          (d/spawn! :armed 2 1)
-          (d/spawn! :armed 3 3))
-    2 (-> entities
-          (d/spawn! :plain 3 4))
+          (d/spawn! :plain 7 7))
+    2 (-> entities ;B
+          (d/spawn! :armed 4 9)
+          (d/spawn! :armed 3 8)
+          (d/spawn! :armed 5 5))
+    3 (-> entities ;AB
+          (d/spawn! :armed 4 3)
+          (d/spawn! :armed 3 2)
+          (d/spawn! :armed 5 0)
+          (d/spawn! :plain 7 0)
+          (d/spawn! :plain 8 2))
+
     (do (reset! u/level 0) (u/show-message entities "ending.png"))))
 
 

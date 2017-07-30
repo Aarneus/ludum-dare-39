@@ -68,10 +68,10 @@
         src-y (-> (:y planet) (+ u/half-token-size))
         dst-x (-> (:x target) (+ u/half-token-size))
         dst-y (-> (:y target) (+ u/half-token-size))]
-    (if (> (:id planet) chain)
+    (if (some? (:particle planet))
       (if (<= (:chain-cooldown planet) 0)
         (-> entities
-            (d/spawn-particle! :blue-line src-x src-y dst-x dst-y (:id planet) chain)
+            (d/spawn-particle! (:particle planet) src-x src-y dst-x dst-y (:id planet) chain)
             (u/update-entities (u/is? planet)
                                (fn [e] (assoc e :chain-cooldown
                                          (/ (u/calculate-particle-life src-x src-y dst-x dst-y) u/chain-interval)))))
