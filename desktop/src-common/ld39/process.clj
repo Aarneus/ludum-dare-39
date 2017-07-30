@@ -7,6 +7,13 @@
 
 
 
+(defn remove-dead [entities]
+  (let [removed (filter (fn [e] (and (:energy e) (= 0 (:energy e)))) entities)]
+    (loop [r removed e entities]
+      (if (empty? r) e (recur (rest r) (d/despawn e (first r)))))))
+
+
+
 (defn -get-planets-in-range [entities planet]
   "Returns a list of the id:s of the planets in chain range of the given one"
   (filter some? (->> entities
@@ -51,7 +58,6 @@
   (->> entities
        (map (fn [e]
               (if (nil? (:chain-range e)) e (-update-planet-chains e entities))))))
-
 
 
 

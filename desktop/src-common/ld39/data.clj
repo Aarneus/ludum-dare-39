@@ -33,7 +33,7 @@
 (defn spawn! [entities word x y]
   "Spawn a given entity"
   (let [entity (case word
-                 :snake (assoc (create-token! x y 1 0 5 nil nil nil) :player? true)
+                 :snake (assoc (create-token! x y 1 0 10 nil nil nil) :player? true)
                  :plain (create-token!
                           x y  0 2  2 1  1 ())
                  :armed (create-token!

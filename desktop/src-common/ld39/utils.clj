@@ -4,6 +4,9 @@
     [play-clj.g2d :refer :all]))
 
 
+(def screen-width 640)
+(def screen-height 640)
+
 (def token-size 64)
 (def half-token-size (/ token-size 2))
 (def font-size 16)
@@ -17,19 +20,23 @@
 (def chain-interval 5)
 (def chain-speed 1)
 
+(def message-width 512)
+(def message-height 256)
+(def message-offset-x (/ (- screen-width message-width) 2))
+(def message-offset-y (/ (- screen-height message-height) 2))
+
 (def textures (atom {}))
 (def sounds (atom {}))
 (def id (atom 0))
+(def level (atom 0))
 
 (def tween-keywords
   (list :tween-x :x
         :tween-y :y
         :tween-angle :angle))
 
-
 (defn radian-to-degree [x]
   (/ (* 180 x) Math/PI))
-
 
 (defn floor [i]
   (-> i (Math/floor) (int)))
@@ -60,6 +67,15 @@
 (defn not-player? [entity]
   (and (:token? entity) (not (:player? entity))))
 
+
+(defn victory? [entities]
+  (nil? (find-first (fn [e] (and (:token? e) (not (:player? e)))) entities)))
+
+(defn game-over? [entities]
+  (nil? (find-first :player? entities)))
+
+(defn menu? [entities]
+  (some? (find-first :message? entities)))
 
 (defn calculate-particle-life [x y tx ty]
     (/ (euclidean-distance [x tx] [y ty]) chain-speed))
@@ -183,7 +199,31 @@
     (fn [entity] (if (condition entity) (effect entity) entity))
     entities))
 
+(defn update-underlay [entities]
+  "Shows the underlay when the player is not moving"
+  (if (game-over? entities)
+    (update-entities entities :underlay? (fn [e] (assoc e :z -1)))
+    (let [player (find-first :player? entities)
+          player-moving? (and (:tween-x player) (> (Math/abs (- (:tween-x player) (:x player))) 1))
+          ux (- (:x player) token-size)
+          uy (- (:y player) token-size)
+          uz (if player-moving? -1 0.2)]
+      (update-entities
+        entities :underlay? (fn [e] (assoc e :x ux :y uy :z uz))))))
 
+(defn clear-messages [entities]
+  "Deletes all messages"
+  (filter (fn [e] (not (:message? e))) entities))
+
+
+(defn show-message [entities message]
+  "Sets the given message image up"
+  (-> entities
+      (clear-messages)
+      (conj (assoc (create-sprite!
+                     message message-offset-x message-offset-y 6
+                     512 256 0 0)
+              :message? true))))
 
 
 
