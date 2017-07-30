@@ -14,7 +14,7 @@
 (defn create-numbers! [entities entity]
   "Creates the number sprites for the entity"
   (-> entities
-      (create-number! 0 0 true :energy entity (if (:player? entity) 0 1))
+      (create-number! 0 0 true :energy entity (if (:player? entity) 0 0))
       (create-number! 10 10 false :defense entity 2)))
 
 (defn create-token! [tile-x tile-y frame-x frame-y energy defense chain-range particle effects]
@@ -36,10 +36,13 @@
   (let [entity (case word
                  :snake (assoc (create-token! x y 1 0 10 nil nil nil nil) :player? true)
                  :plain (create-token!
-                          x y  0 2  2 0  0 nil ())
+                          x y   0 2   2 0   0 nil ())
                  :armed (create-token!
-                          x y  0 0  3 1  1 :red-arrow
+                          x y   0 0   3 1   1 :red-arrow
                           (list (list :tick :chained :defense 1)))
+                 :giant (create-token!
+                          x y   0 3   1 0   1 nil
+                          (list (list :tick :self :energy 1)))
                  nil)]
     (-> entities
         (conj entity)

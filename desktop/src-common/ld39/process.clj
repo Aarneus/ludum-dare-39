@@ -135,6 +135,7 @@
                   (-> entity
                       (u/set-frame (:colour entity) value)
                       (assoc
-                        :x (+ (:x owner) (if (:flip? entity) u/number-flip-offset 0))
-                        :y (:y owner))))
+                        :x (+ (:x owner) (if (:flip? entity) (- u/number-flip-offset u/number-offset-x) u/number-offset-x))
+                        :y (+ (:y owner) u/number-offset-y)
+                        :z (if (= 0 value) -1 (:z entity)))))
                   entity)))))

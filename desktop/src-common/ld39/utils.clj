@@ -16,6 +16,8 @@
 (def tween-speed 0.3)
 
 (def number-flip-offset (- token-size font-size))
+(def number-offset-x 4)
+(def number-offset-y 4)
 (def particle-life 10)
 (def chain-interval 5)
 (def chain-speed 1)

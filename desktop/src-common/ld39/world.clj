@@ -41,6 +41,20 @@
           (d/spawn! :armed 5 0)
           (d/spawn! :plain 7 0)
           (d/spawn! :plain 8 2))
+    4 (-> entities ;C
+          (d/spawn! :giant 4 5))
+    5 (-> entities ;AC
+          (d/spawn! :plain 7 4)
+          (d/spawn! :plain 6 2)
+          (d/spawn! :giant 2 2)
+          (d/spawn! :plain 2 8))
+    6 (-> entities ;BC
+          (d/spawn! :armed 5 5)
+          (d/spawn! :armed 4 4)
+          (d/spawn! :giant 6 5)
+          (d/spawn! :giant 3 3))
+
+
 
     (do (reset! u/level 0) (u/show-message entities "ending.png"))))
 
