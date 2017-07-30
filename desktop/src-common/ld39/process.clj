@@ -21,11 +21,9 @@
 
 
 (defn -destroy-chain [planet chained entities]
-  ;TODO Effects
   (assoc planet :chains (remove (fn [c] (= c chained)) (:chains planet))))
 
 (defn -create-chain [planet chained entities]
-  ;TODO Effects
   (assoc planet :chains (conj (:chains planet) chained)))
 
 
@@ -67,7 +65,7 @@
     (if (> (:id planet) chain)
       (if (<= (:chain-cooldown planet) 0)
         (-> entities
-            (d/spawn-particle! :blue-line src-x src-y dst-x dst-y)
+            (d/spawn-particle! :blue-line src-x src-y dst-x dst-y (:id planet) chain)
             (u/update-entities (u/is? planet)
                                (fn [e] (assoc e :chain-cooldown
                                          (/ (u/calculate-particle-life src-x src-y dst-x dst-y) u/chain-interval)))))

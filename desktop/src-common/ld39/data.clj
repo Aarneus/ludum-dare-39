@@ -46,7 +46,10 @@
 
 (defn despawn [entities entity]
   "Destroys the entity and any entities that have it as owner"
-  (map (fn [e] (if (or ((u/is? entity) e) (= (:id entity) (:owner-id e)))
+  (map (fn [e] (if (or ((u/is? entity) e)
+                       (= (:id entity) (:owner-id e))
+                       (= (:id entity) (:chained-1 e))
+                       (= (:id entity) (:chained-2 e)))
                  nil e)) entities))
 
 
@@ -71,9 +74,10 @@
        nil)))
 
 
-(defn spawn-particle! [entities word x y target-x target-y]
+(defn spawn-particle! [entities word x y target-x target-y chained-1 chained-2]
   "Spawns a given particle"
   (let [p (-get-p word x y target-x target-y)]
     (u/create-particle! entities
                         (:x p) (:y p) (:z p) (:angle p) (:frame-x p) (:frame-y p)
-                        (:tween-x p) (:tween-y p)(:life p) (:tween-speed p))))
+                        (:tween-x p) (:tween-y p)(:life p) (:tween-speed p)
+                        chained-1 chained-2)))

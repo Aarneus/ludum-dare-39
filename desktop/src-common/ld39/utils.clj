@@ -123,7 +123,8 @@
         :filename filename :width width :height height
         :tween-speed tween-speed)))
 
-(defn create-particle! [entities x y z angle frame-x frame-y tween-x tween-y life tween-speed]
+(defn create-particle! [entities x y z angle frame-x frame-y tween-x tween-y
+                        life tween-speed chained-1 chained-2]
   (let [entity (assoc (create-sprite! "font.png" x y z font-size font-size frame-x frame-y)
                  :token? false
                  :particle? true
@@ -131,6 +132,8 @@
                  :tween-y tween-y
                  :life life
                  :angle angle
+                 :chained-1 chained-1
+                 :chained-2 chained-2
                  :tween-speed tween-speed
                  :tween-lerp? true)]
     (conj entities entity)))
