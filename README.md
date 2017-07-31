@@ -1,9 +1,9 @@
 ## Introduction
 
-A play-clj game in which ... well, that part is up to you.
+My entry to Ludum Dare #39
+Powersnek!
 
 ## Contents
-
 * `android/src` Android-specific code
 * `desktop/resources` Images, audio, and other files
 * `desktop/src` Desktop-specific code

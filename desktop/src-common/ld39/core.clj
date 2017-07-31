@@ -13,7 +13,7 @@
   :on-show
   (fn [screen entities]
     (graphics! :set-resizable false)
-    (graphics! :set-title "LD 39")
+    (graphics! :set-title "Powersnek - Ludum Dare 39")
     (update! screen :renderer (stage))
     (w/main-menu))
 
@@ -32,8 +32,14 @@
 
   :on-touch-down
   (fn [screen entities]
-    (c/click entities (game :x) (game :y) (= (:button screen) (button-code :left)))))
+    (c/click entities (game :x) (game :y) (= (:button screen) (button-code :left))))
 
+
+  :on-key-down
+  (fn [screen entities]
+    (cond
+      (= (:key screen) (key-code :f12)) (do (screenshot! "screenshot.png") entities)
+      (= (:key screen) (key-code :escape)) (w/main-menu))))
 
 
 (defgame ld39-game
